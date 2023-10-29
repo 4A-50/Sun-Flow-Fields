@@ -32,7 +32,7 @@ class Particle {
 	//Moves The Particle
         this.pos.add(this.vel);
     }
-    
+
     //Displays The Particle
     Show(){
 	//Draws A Line From Its Current Pos To Its New One
@@ -78,7 +78,7 @@ let mode = 0;
 function setup() {
     //Sun Times From The API
     sunTimes = [ 1697949586,1697951881,1697954191,1697956116,1697974792,1697993467,1697995392,1697997703,1697999998];
-    
+
     //Sets The Colours Based On The Mode
     if(mode == 1){
     	//Bump Up The Particle Count On Day Mode To Fill The Screen Quicker
@@ -138,7 +138,7 @@ function draw(){
             break;
         default:
             Mode0();
-            break; 
+            break;
   }
 }
 
@@ -158,7 +158,7 @@ function BuildWindow(){
 
     //Inits The Colours
     SetupColours();
-  
+
     //Generate The Particles
     for (let i = 0; i < particleCount; i++){
       	particles.push(new Particle());
@@ -195,7 +195,7 @@ function Mode0(){
     //Increments The Unix Time To Stay Up To Date With IRL Time
     if (frameCount % 60 == 0) {
         unixTime ++;
-        
+
         //Every 60 Seconds Check To Change Lerp Colours
         if(unixTime % 60 == 0){
           SetupColours();
@@ -206,7 +206,7 @@ function Mode0(){
 function Mode1(){
     //Increments The Unix Time 300 Times A Frame
     unixTime += 300;
-    
+
     //Checks The Lerp Colours Each Frame
     SetupColours();
 
@@ -214,5 +214,12 @@ function Mode1(){
     if (unixTime - 1698019200 >= 86400 && isLooping()) {
         saveCanvas('22.10.2023', 'jpg');
         noLoop();
+    }
+}
+
+function keyPressed() {
+    //Saves The Current Canvas If The User Preses The 'S' Key When In Realtime Mode
+    if (key === 's' && mode != 1) {
+        saveCanvas('<?php echo date("d.m.Y"); ?>', 'jpg');
     }
 }

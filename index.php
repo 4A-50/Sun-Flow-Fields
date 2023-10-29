@@ -97,11 +97,11 @@ if(isset($_GET['m']) && !empty($_GET['m'])){
 		<meta content='https://repository-images.githubusercontent.com/708134510/fcb3d1aa-e114-4333-a8a3-b97927284107' property='og:image'>
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="theme-color" content="#35b88f">
-		
+
 		<script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet"> 
+		<link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 	</head>
 	<body style="margin: 0px; padding: 0px">
 		<script>
@@ -159,7 +159,7 @@ class Particle {
 //Starting Unix Time
 let unixTime = <?php if($flowMode == 0)
                         echo time();
-                     else 
+                     else
                         echo strtotime("00:00:00"); ?>;
 
 //Particle Array & Count
@@ -168,7 +168,10 @@ let particleCount = 50;
 
 //Noise Scale And Particle Direction
 let noiseScale = 200
-let direction = 1;
+let direction = <?php if(date("d") % 2 == 0)
+                        echo 1;
+                     else
+                        echo -1; ?>;
 
 //If The Particles Should Be Lerping Colours
 let lerpingCols = true;
@@ -195,7 +198,7 @@ function setup() {
 							strtotime($decodedJSON->results->civil_twilight_end).",".
 							strtotime($decodedJSON->results->nautical_twilight_end).",".
 							strtotime($decodedJSON->results->astronomical_twilight_end); ?>];
-    
+
 	//Sets The Colours Based On The Mode
     if(mode == 1){
 		//Bump Up The Particle Count On Day Mode To Fill The Screen Quicker
@@ -255,7 +258,7 @@ function draw(){
             break;
         default:
             Mode0();
-            break; 
+            break;
   }
 }
 
@@ -275,7 +278,7 @@ function BuildWindow(){
 
 	//Inits The Colours
     SetupColours();
-  
+
 	//Generate The Particles
     for (let i = 0; i < particleCount; i++){
       	particles.push(new Particle());
@@ -312,7 +315,7 @@ function Mode0(){
     //Increments The Unix Time To Stay Up To Date With IRL Time
     if (frameCount % 60 == 0) {
         unixTime ++;
-        
+
         //Every 60 Seconds Check To Change Lerp Colours
         if(unixTime % 60 == 0){
           SetupColours();
@@ -323,7 +326,7 @@ function Mode0(){
 function Mode1(){
 	//Increments The Unix Time 300 Times A Frame
     unixTime += 300;
-    
+
 	//Checks The Lerp Colours Each Frame
     SetupColours();
 
@@ -331,6 +334,13 @@ function Mode1(){
     if (unixTime - <?php echo strtotime("00:00:00 Tomorrow"); ?> >= 86400 && isLooping()) {
         saveCanvas('<?php echo date("d.m.Y"); ?>', 'jpg');
         noLoop();
+    }
+}
+
+function keyPressed() {
+    //Saves The Current Canvas If The User Preses The 'S' Key When In Realtime Mode
+    if (key === 's' && mode != 1) {
+        saveCanvas('<?php echo date("d.m.Y"); ?>', 'jpg');
     }
 }
 		</script>
@@ -350,6 +360,6 @@ function Mode1(){
             </div>
         </div>
 
-		
+
 	</body>
 </html>
